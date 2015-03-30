@@ -26,8 +26,9 @@ your environment:
     parameters:
       ssh_key_name: apmelton
       external_network_id: 028d70dd-67b8-4901-8bdd-0c62b06cce2d
-      dns_nameserver: 192.168.200.1
+      dns_nameserver: 10.32.105.133
       server_image: ubuntu-14.04
+      lattice_tar_path: http://10.32.105.222/lattice.tgz
 
 And then create the stack, referencing that environment file:
 
@@ -38,7 +39,7 @@ You must provide values for:
 - `ssh_key_name`
 - `external_network_id`
 - `server_image`
-- `swarm_token`
+- `lattice_tar_path`
 
 ## Interacting with Lattice
 

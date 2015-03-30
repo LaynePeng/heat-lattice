@@ -38,7 +38,7 @@ parameters:
     type: string
     description: The IP of Coordinator.
 
-  lattice_tar_path:
+  lattice_tar_url:
     type: string
     description: The release of Lattice project
 
@@ -104,7 +104,7 @@ resources:
         str_replace:
           template: {get_file: fragments/install_coordinator.sh}
           params:
-            "$PATH_TO_LATTICE_TAR": {get_param: lattice_tar_path}
+            "$LATTICE_TAR_URL": {get_param: lattice_tar_url}
 
   cfn_signal:
     type: "OS::Heat::SoftwareConfig"

@@ -21,7 +21,7 @@ parameters:
     type: string
     description: uuid of a network to use for floating ip addresses
 
-  lattice_tar_path:
+  lattice_tar_url:
     type: string
     description: The release of Lattice project
 
@@ -156,7 +156,7 @@ resources:
         str_replace:
           template: {get_file: fragments/install_coordinator.sh}
           params:
-            "$PATH_TO_LATTICE_TAR": {get_param: lattice_tar_path}
+            "$LATTICE_TAR_URL": {get_param: lattice_tar_url}
 
   cfn_signal:
     type: "OS::Heat::SoftwareConfig"
@@ -232,7 +232,7 @@ resources:
           fixed_subnet_id: {get_resource: fixed_subnet}
           external_network_id: {get_param: external_network_id}
           coordinator_ip: {get_attr: [lattice_coordinator_floating, floating_ip_address]}
-          lattice_tar_path: {get_param: lattice_tar_path}
+          lattice_tar_path: {get_param: lattice_tar_url}
           index: %index%
 
 outputs:
