@@ -1,0 +1,9 @@
+#cloud-config
+merge_how: dict(recurse_array)+list(append)
+write_files:
+  - path: /var/lattice/setup/lattice-environment
+    owner: "root:root"
+    permissions: "0644"
+    content: |
+      CONSUL_SERVER_IP="$COORDINATOR_IP"
+      SYSTEM_DOMAIN="$COORDINATOR_IP.$SYSTEM_DOMAIN"
