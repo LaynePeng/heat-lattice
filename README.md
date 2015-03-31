@@ -1,7 +1,7 @@
 A Lattice cluster with Heat
 ==============================
 
-This project is inspired and imitated by the [docker-swarm heat](https://github.com/openstack/magnum/tree/master/magnum/templates/docker-swarm) project.
+This project is inspired by the [docker-swarm heat](https://github.com/openstack/magnum/tree/master/magnum/templates/docker-swarm) project， and imitates it. I am planning to integreate it to the Magnum project, keep it similar with the style may help.
 
 These [Heat][] templates will deploy an *N*-node Lattice cluster,
 where *N* is the value of the `number_of_nodes` parameter you
