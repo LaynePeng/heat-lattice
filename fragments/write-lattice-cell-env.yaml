@@ -5,6 +5,6 @@ write_files:
     owner: "root:root"
     permissions: "0644"
     content: |
-      CONSUL_SERVER_IP="$COORDINATOR_IP"
-      LATTICE_CELL_ID=cell-"$ID"
-      GARDEN_EXTERNAL_IP="$CELL_IP"
+      CONSUL_SERVER_IP=$COORDINATOR_IP
+      LATTICE_CELL_ID=cell-$ID
+      GARDEN_EXTERNAL_IP=$CELL_IP

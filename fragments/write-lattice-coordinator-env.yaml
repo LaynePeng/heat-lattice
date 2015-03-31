@@ -5,5 +5,5 @@ write_files:
     owner: "root:root"
     permissions: "0644"
     content: |
-      CONSUL_SERVER_IP="$COORDINATOR_IP"
-      SYSTEM_DOMAIN="$COORDINATOR_IP.$SYSTEM_DOMAIN"
+      CONSUL_SERVER_IP=$COORDINATOR_IP
+      SYSTEM_DOMAIN=$COORDINATOR_IP.$SYSTEM_DOMAIN

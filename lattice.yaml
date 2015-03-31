@@ -32,7 +32,7 @@ parameters:
 
   system_domain:
     type: string
-    default: .xip.io
+    default: xip.io
     description: The system domain of Lattice
 
   server_flavor:
