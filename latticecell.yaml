@@ -84,6 +84,17 @@ resources:
   #
   # software configs.  these are components that are combined into
   # a multipart MIME user-data archive.
+  
+  write_heat_params:
+    type: "OS::Heat::SoftwareConfig"
+    properties:
+      group: ungrouped
+      config:
+        str_replace:
+          template: {get_file: fragments/write-heat-params.yaml}
+          params:
+            "$WAIT_HANDLE": {get_resource: node_wait_handle}
+
   write_lattice_cell_env:
     type: "OS::Heat::SoftwareConfig"
     properties:
@@ -102,7 +113,7 @@ resources:
       group: ungrouped
       config:
         str_replace:
-          template: {get_file: fragments/install_coordinator.sh}
+          template: {get_file: fragments/install_cell.sh}
           params:
             "$LATTICE_TAR_URL": {get_param: lattice_tar_url}
 
@@ -116,6 +127,7 @@ resources:
     type: "OS::Heat::MultipartMime"
     properties:
       parts:
+        - config: {get_resource: write_heat_params}
         - config: {get_resource: write_lattice_cell_env}
         - config: {get_resource: install_cell}
         - config: {get_resource: cfn_signal}
@@ -141,7 +153,7 @@ resources:
       network_id:
         get_param: fixed_network_id
       security_groups:
-        - get_resource: secgroup_node
+        - get_resource: secgroup_cell
       fixed_ips:
         - subnet_id:
             get_param: fixed_subnet_id

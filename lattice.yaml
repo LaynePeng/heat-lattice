@@ -1,12 +1,8 @@
 heat_template_version: 2013-05-23
 
 description: >
-  This template will boot a Docker swarm cluster. A swarm cluster is made up
-  of a single manager node, and N agent nodes. Every node in the cluster,
-  including the manager, is running a Docker daemon and a swarm agent
-  advertising it to the cluster. The manager is running an addition swarm
-  manager container listening on port 2376. By default, the cluster is made
-  up of one manager node and one agent node.
+  This template will boot a Lattice cluster. A Lattice cluster is made up
+  of a single coordinator node, and N cell nodes. 
 
 parameters:
 
@@ -35,7 +31,7 @@ parameters:
     description: glance image used to boot the server
 
   system_domain:
-    type: system_domain
+    type: string
     default: .xip.io
     description: The system domain of Lattice
 
@@ -67,10 +63,10 @@ resources:
   coordinator_wait_condition:
     type: "AWS::CloudFormation::WaitCondition"
     depends_on:
-      - coordinator
+      - lattice_coordinator_server
     properties:
       Handle:
-        get_resource: master_wait_handle
+        get_resource: coordinator_wait_handle
       Timeout: 6000
 
   ######################################################################
@@ -137,6 +133,17 @@ resources:
   # software configs.  these are components that are combined into
   # a multipart MIME user-data archive.
   #
+
+  write_heat_params:
+    type: "OS::Heat::SoftwareConfig"
+    properties:
+      group: ungrouped
+      config:
+        str_replace:
+          template: {get_file: fragments/write-heat-params.yaml}
+          params:
+            "$WAIT_HANDLE": {get_resource: coordinator_wait_handle}
+
   write_lattice_coordinator_env:
     type: "OS::Heat::SoftwareConfig"
     properties:
@@ -168,6 +175,7 @@ resources:
     type: "OS::Heat::MultipartMime"
     properties:
       parts:
+        - config: {get_resource: write_heat_params}
         - config: {get_resource: write_lattice_coordinator_env}
         - config: {get_resource: install_coordinator}
         - config: {get_resource: cfn_signal}
@@ -223,7 +231,7 @@ resources:
     properties:
       count: {get_param: number_of_nodes}
       resource_def:
-        type: lattice_cell.yaml
+        type: latticecell.yaml
         properties:
           ssh_key_name: {get_param: ssh_key_name}
           server_image: {get_param: server_image}
@@ -231,9 +239,9 @@ resources:
           fixed_network_id: {get_resource: fixed_network}
           fixed_subnet_id: {get_resource: fixed_subnet}
           external_network_id: {get_param: external_network_id}
-          coordinator_ip: {get_attr: [lattice_coordinator_floating, floating_ip_address]}
-          lattice_tar_path: {get_param: lattice_tar_url}
-          index: %index%
+          coordinator_ip: {get_attr: [lattice_coordinator_eth0, fixed_ips, 0, ip_address]}
+          lattice_tar_url: {get_param: lattice_tar_url}
+          index: "%index%"
 
 outputs:
 
