@@ -1,15 +1,12 @@
 heat_template_version: 2013-05-23
 
 description: >
-  This is a nested stack that defines a single swarm node,
-  based on a vanilla Fedora 20 cloud image.  This stack is included by
-  a ResourceGroup resource in the parent template (swarm.yaml).
+  Create the cell nodes.
 
 parameters:
 
   server_image:
     type: string
-    default: fedora-atomic
     description: glance image used to boot the server
 
   server_flavor:
