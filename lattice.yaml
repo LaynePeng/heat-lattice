@@ -17,14 +17,18 @@ parameters:
     type: string
     description: uuid of a network to use for floating ip addresses
 
-  lattice_tar_url:
-    type: string
-    description: The release of Lattice project
+
 
   
   #
   # OPTIONAL PARAMETERS
   #
+
+  lattice_tar_url:
+    type: string
+    default: https://s3-us-west-2.amazonaws.com/lattice/unstable/latest/lattice.tgz
+    description: The release of Lattice project
+
   server_image:
     type: string
     default: ubuntu-14.04
