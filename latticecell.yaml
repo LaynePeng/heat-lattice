@@ -46,6 +46,21 @@ parameters:
     type: string
     description: The cell index.
 
+  cert_file:
+    type: string
+    default: default
+    description: Custom certification files for SSL
+
+  source_list:
+    type: string
+    default: default
+    description: Custom source list files
+
+  proxy:
+    type: string
+    default: default
+    description: Custom http proxy
+
 
 resources:
 
@@ -85,15 +100,35 @@ resources:
   # software configs.  these are components that are combined into
   # a multipart MIME user-data archive.
   
-  write_heat_params:
+  set_proxy:
     type: "OS::Heat::SoftwareConfig"
     properties:
       group: ungrouped
       config:
         str_replace:
-          template: {get_file: fragments/write-heat-params.yaml}
+          template: {get_file: fragments/set_proxy.sh}
           params:
-            "$WAIT_HANDLE": {get_resource: node_wait_handle}
+            "$PROXY": {get_param: proxy}
+
+  add_ssl_cert:
+    type: "OS::Heat::SoftwareConfig"
+    properties:
+      group: ungrouped
+      config:
+        str_replace:
+          template: {get_file: fragments/add_certs.sh}
+          params:
+            "$CERTS_Files": {get_param: cert_file}
+
+  update_source_list:
+    type: "OS::Heat::SoftwareConfig"
+    properties:
+      group: ungrouped
+      config:
+        str_replace:
+          template: {get_file: fragments/update_source.sh}
+          params:
+            "$SOURCES_LIST": {get_param: source_list}
 
   write_lattice_cell_env:
     type: "OS::Heat::SoftwareConfig"
@@ -121,13 +156,19 @@ resources:
     type: "OS::Heat::SoftwareConfig"
     properties:
       group: ungrouped
-      config: {get_file: fragments/cfn-signal.sh}
+      config:
+        str_replace:
+          template: {get_file: fragments/cfn-signal.sh}
+          params:
+            "$WAIT_HANDLE": {get_resource: node_wait_handle}
 
   lattice_cell_init:
     type: "OS::Heat::MultipartMime"
     properties:
       parts:
-        - config: {get_resource: write_heat_params}
+        - config: {get_resource: set_proxy}
+        - config: {get_resource: add_ssl_cert}
+        - config: {get_resource: update_source_list}
         - config: {get_resource: write_lattice_cell_env}
         - config: {get_resource: install_cell}
         - config: {get_resource: cfn_signal}
