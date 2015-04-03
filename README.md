@@ -1,52 +1,67 @@
 A Lattice cluster with Heat
 ==============================
 
+This project is inspired by the [docker-swarm heat](https://github.com/openstack/magnum/tree/master/magnum/templates/docker-swarm) project，and imitates it. I am planning to integreate it to the Magnum project, keep it similar with the style may help.
+
 These [Heat][] templates will deploy an *N*-node Lattice cluster,
 where *N* is the value of the `number_of_nodes` parameter you
 specify when creating the stack.
 
-[heat]: https://wiki.openstack.org/wiki/Heat
+heat: https://wiki.openstack.org/wiki/Heat
+
+Lattice: http://lattice.cf/index.html
 
 ## Requirements
 
 ### OpenStack
 
-These templates will work with the Juno version of Heat.
+These templates will work with the Juno version of Heat. And:
+
+1. External network should be pre-created;
+2. SSH Key should be pre-created. 
 
 ### Guest image
 
-These templates will work with Ubuntu 14.04
+These templates will work with Ubuntu 14.04 Cloud Image, which can be downloaded from: http://cloud-images.ubuntu.com/trusty/current/ . 
 
 ## Creating the stack
-
 
 Creating an environment file `local.yaml` with parameters specific to
 your environment:
 
     parameters:
-      ssh_key_name: apmelton
+      ssh_key_name: lattice
       external_network_id: 028d70dd-67b8-4901-8bdd-0c62b06cce2d
       dns_nameserver: 10.32.105.133
-      server_image: ubuntu_14.04_cloud_image
+      server_image: ubuntu-14.04
+      number_of_nodes: 10
       lattice_tar_url: http://10.32.105.222/lattice.tgz
+      
+Parameters: 
+
+* ssh_key_name: The name of precreated SSH key;
+* external_network_id: The ID of precreated external network;
+* dns_nameserver: Optional paramters, set if your enviroment cannot use 8.8.8.8
+* server_image: The name of Ubuntu Cloud Image;
+* number_of_nodes: Optional paramters, it is 3 by default. The number of Lattice cells will be added to the cluster;
+* lattice_tar_url: Optional paramters, considering we may build Lattice ourself, we can put our build in FTP, or HTTP server. We use "wget" to fetch the images. By default, we will download from: https://s3-us-west-2.amazonaws.com/lattice/unstable/latest/lattice.tgz .
+
+And more optional parameter, please check from [lattice.yaml](https://github.com/LaynePeng/heat-lattice/blob/master/lattice.yaml)
 
 And then create the stack, referencing that environment file:
 
     heat stack-create -f lattice.yaml -e local.yaml my-lattice-cluster
 
-You must provide values for:
-
-- `ssh_key_name`
-- `external_network_id`
-- `server_image`
-- `lattice_tar_url`
-
 ## Interacting with Lattice
 
+Please follow the guide in [Lattice Get Started](http://lattice.cf/docs/getting-started.html). 
 
-## Testing
+The target is the floating IP of coordinator node with the domain you set (xio.io by default). For example, suppose the floating IP is 10.32.80.133, then please run:
 
-
+    ltc target 10.32.80.133.xip.io
+    ltc vz
+    
+You should see the cells have been added to Lattice clusters.
 
 ## License
 
