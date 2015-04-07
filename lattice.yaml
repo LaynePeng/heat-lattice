@@ -153,16 +153,6 @@ resources:
   # a multipart MIME user-data archive.
   #
 
-  set_proxy:
-    type: "OS::Heat::SoftwareConfig"
-    properties:
-      group: ungrouped
-      config:
-        str_replace:
-          template: {get_file: fragments/set_proxy.sh}
-          params:
-            "$PROXY": {get_param: proxy}
-
   add_ssl_cert:
     type: "OS::Heat::SoftwareConfig"
     properties:
@@ -219,7 +209,6 @@ resources:
     type: "OS::Heat::MultipartMime"
     properties:
       parts:
-        - config: {get_resource: set_proxy}
         - config: {get_resource: add_ssl_cert}
         - config: {get_resource: update_source_list}
         - config: {get_resource: write_lattice_coordinator_env}
@@ -289,6 +278,7 @@ resources:
           lattice_tar_url: {get_param: lattice_tar_url}
           cert_file: {get_param: cert_file}
           source_list: {get_param: source_list}
+          proxy: {get_param: proxy}
           index: "%index%"
 
 outputs:

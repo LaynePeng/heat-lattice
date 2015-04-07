@@ -161,11 +161,11 @@ resources:
     type: "OS::Heat::MultipartMime"
     properties:
       parts:
-        - config: {get_resource: set_proxy}
         - config: {get_resource: add_ssl_cert}
         - config: {get_resource: update_source_list}
         - config: {get_resource: write_lattice_cell_env}
         - config: {get_resource: install_cell}
+        - config: {get_resource: set_proxy}
         - config: {get_resource: cfn_signal}
 
   lattice_cell:
