@@ -8,4 +8,5 @@ if [ "$SOURCES_LIST" != "default" ]; then
     wget $SOURCES_LIST --quiet -O /etc/apt/sources.list
 
     apt-get update
+    apt-get install -y install gcc make
 fi
