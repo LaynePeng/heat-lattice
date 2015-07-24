@@ -33,6 +33,14 @@ parameters:
     type: string
     description: The IP of Coordinator.
 
+  lattice_username:
+    type: string
+    description: The user name of Diego
+
+  lattice_password:
+    type: string
+    description: The password of Diego
+
   lattice_tar_url:
     type: string
     description: The release of Lattice project
@@ -136,6 +144,8 @@ resources:
             "$COORDINATOR_IP": {get_param: coordinator_ip}
             "$ID": {get_param: index}
             "$CELL_IP": {get_attr: [lattice_cell_eth0, fixed_ips, 0, ip_address]}
+            "$LATTICE_USERNAME": {get_param: lattice_username}
+            "$LATTICE_PASSWORD": {get_param: lattice_password}
 
   install_cell:
     type: "OS::Heat::SoftwareConfig"

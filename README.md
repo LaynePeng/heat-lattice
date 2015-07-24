@@ -43,8 +43,12 @@ Parameters:
 * external_network_id: The ID of precreated external network;
 * dns_nameserver: Optional paramters, set if your enviroment cannot use 8.8.8.8
 * server_image: The name of Ubuntu Cloud Image;
-* number_of_nodes: Optional paramters, it is 3 by default. The number of Lattice cells will be added to the cluster;
-* lattice_tar_url: Optional paramters, considering we may build Lattice ourself, we can put our build in FTP, or HTTP server. We use "wget" to fetch the images. By default, we will download from: https://s3-us-west-2.amazonaws.com/lattice/unstable/latest/lattice.tgz .
+* number_of_nodes: Optional parameters, it is 3 by default. The number of Lattice cells will be added to the cluster;
+* lattice_tar_url: Optional parameters, considering we may build Lattice ourself, we can put our build in FTP, or HTTP server. 
+* lattice_username: Optional parameters, default is "user".
+* lattice_password: Optional parameters, default is "pass".
+
+We use "wget" to fetch the images. By default, we will download from: https://s3-us-west-2.amazonaws.com/lattice/unstable/latest/lattice.tgz .
 
 And more optional parameter, please check from [lattice.yaml](https://github.com/LaynePeng/heat-lattice/blob/master/lattice.yaml)
 

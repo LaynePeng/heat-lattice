@@ -49,6 +49,16 @@ parameters:
     description: address of a dns nameserver reachable in your environment
     default: 8.8.8.8
 
+  lattice_username:
+    type: string
+    default: user
+    description: The user name of Diego
+
+  lattice_password:
+    type: string
+    default: password
+    description: The password of Diego
+
   number_of_nodes:
     type: string
     description: how many swarm nodes to spawn
@@ -184,6 +194,9 @@ resources:
           params:
             "$COORDINATOR_IP": {get_attr: [lattice_coordinator_floating, floating_ip_address]}
             "$SYSTEM_DOMAIN": {get_param: system_domain}
+            "$LATTICE_USERNAME": {get_param: lattice_username}
+            "$LATTICE_PASSWORD": {get_param: lattice_password}
+
 
   install_coordinator:
     type: "OS::Heat::SoftwareConfig"
@@ -274,6 +287,8 @@ resources:
           fixed_network_id: {get_resource: fixed_network}
           fixed_subnet_id: {get_resource: fixed_subnet}
           external_network_id: {get_param: external_network_id}
+          lattice_username: {get_param: lattice_username}
+          lattice_password: {get_param: lattice_password}
           coordinator_ip: {get_attr: [lattice_coordinator_eth0, fixed_ips, 0, ip_address]}
           lattice_tar_url: {get_param: lattice_tar_url}
           cert_file: {get_param: cert_file}
@@ -285,3 +300,9 @@ outputs:
 
   lattice_coordinator:
     value: {get_attr: [lattice_coordinator_floating, floating_ip_address]}
+
+  user_name:
+    value: {get_param: lattice_username}
+
+  password:
+    value: {get_param: lattice_password}
