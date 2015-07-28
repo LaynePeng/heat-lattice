@@ -84,6 +84,11 @@ parameters:
     default: default
     description: Custom http proxy
 
+  private_registries:
+    type: string
+    default: null
+    description: Custom http proxy
+
 resources:
 
   coordinator_wait_handle:
@@ -294,6 +299,7 @@ resources:
           cert_file: {get_param: cert_file}
           source_list: {get_param: source_list}
           proxy: {get_param: proxy}
+          private_registries: {get_param: private_registries}
           index: "%index%"
 
 outputs:
