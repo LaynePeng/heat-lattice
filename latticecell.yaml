@@ -64,6 +64,11 @@ parameters:
     default: default
     description: Custom http proxy
 
+  private_registries:
+    type: string
+    default: null
+    description: Private reigistries for Docker images
+
 
 resources:
 
@@ -157,6 +162,16 @@ resources:
           params:
             "$LATTICE_TAR_URL": {get_param: lattice_tar_url}
 
+  add_private_registries:
+    type: "OS::Heat::SoftwareConfig"
+    properties:
+      group: ungrouped
+      config:
+        str_replace:
+          template: {get_file: fragments/add_private_registries.sh}
+          params:
+            "$PRIVATE_REGISTRIES": {get_param: private_registries}
+
   cfn_signal:
     type: "OS::Heat::SoftwareConfig"
     properties:
@@ -176,6 +191,7 @@ resources:
         - config: {get_resource: write_lattice_cell_env}
         - config: {get_resource: install_cell}
         - config: {get_resource: set_proxy}
+        - config: {get_resource: add_private_registries}
         - config: {get_resource: cfn_signal}
 
   lattice_cell:
