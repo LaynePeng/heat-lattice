@@ -47,6 +47,7 @@ Parameters:
 * lattice_tar_url: Optional parameters, considering we may build Lattice ourself, we can put our build in FTP, or HTTP server. 
 * lattice_username: Optional parameters, default is "user".
 * lattice_password: Optional parameters, default is "password".
+* private_registries: Optional parameters, which is specified the private docker repositories. 
 
 We use "wget" to fetch the images. By default, we will download from: https://s3-us-west-2.amazonaws.com/lattice/unstable/latest/lattice.tgz .
 
@@ -55,6 +56,10 @@ And more optional parameter, please check from [lattice.yaml](https://github.com
 And then create the stack, referencing that environment file:
 
     heat stack-create -f lattice.yaml -e local.yaml my-lattice-cluster
+
+## Use Private Docker Registries
+
+We support set the private Docker image currently. Just specified the "private_registries" variables in Heat. 
 
 ## Interacting with Lattice
 
